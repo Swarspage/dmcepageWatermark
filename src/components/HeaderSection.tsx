@@ -13,9 +13,9 @@ export default function HeaderSection({ onOpenShare }: HeaderSectionProps) {
     <header className="flex flex-col items-center text-center space-y-3.5 max-w-3xl mx-auto pt-2 pb-2">
       {/* Precision Pill Badge & Share Button Row */}
       <div className="flex flex-wrap items-center justify-center gap-2.5">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-[#5E6AD2]/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5E6AD2]/15 border border-[#5E6AD2]/40 shadow-accent-btn backdrop-blur-md">
           <span className="w-1.5 h-1.5 rounded-full bg-[#5E6AD2] animate-pulse" />
-          <span className="text-[11px] font-mono tracking-widest uppercase text-[#EDEDEF]">
+          <span className="text-[11px] font-mono tracking-widest uppercase text-white">
             DMCE PageX Engine • v2.0
           </span>
         </div>

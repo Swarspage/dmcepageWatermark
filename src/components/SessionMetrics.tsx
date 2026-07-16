@@ -29,7 +29,7 @@ export default function SessionMetrics({ stats }: SessionMetricsProps) {
           <Zap className="w-4 h-4" />
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
             Processing Speed
           </span>
           <span className="text-sm font-semibold text-white font-mono">
@@ -44,7 +44,7 @@ export default function SessionMetrics({ stats }: SessionMetricsProps) {
           <PackageCheck className="w-4 h-4" />
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
             Stamped In Session
           </span>
           <span className="text-sm font-semibold text-white font-mono">
@@ -59,7 +59,7 @@ export default function SessionMetrics({ stats }: SessionMetricsProps) {
           <HardDrive className="w-4 h-4" />
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
             Local RAM Buffer
           </span>
           <span className="text-sm font-semibold text-white font-mono">
