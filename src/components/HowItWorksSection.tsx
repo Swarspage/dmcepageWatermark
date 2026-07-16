@@ -120,7 +120,7 @@ export default function HowItWorksSection() {
                   2. Official Stamped Output
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#5E6AD2]/20 text-[#5E6AD2] border border-[#5E6AD2]/30 font-semibold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.15] text-white border border-white/30 font-semibold">
                 READY FOR SUBMISSION
               </span>
             </div>
