@@ -4,13 +4,15 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "DMCE PageX | Premium PDF Processor",
-  description: "Instantly process your academic and official PDFs to automatically append headers, footers, and official college watermarks in high resolution.",
-  authors: [{ name: "DMCE Developer" }],
+  title: "DMCE PageX | Precision PDF Watermark Tool",
+  description:
+    "Instantly append official Datta Meghe header logos and centralized watermarks with cinematic precision and zero cloud storage.",
+  authors: [{ name: "DMCE Developer Engineering" }],
 };
 
 export default function RootLayout({
@@ -19,8 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="dark">
+      <body
+        className={`${inter.variable} antialiased bg-[#050506] text-[#EDEDEF] selection:bg-[#5E6AD2]/30 selection:text-white min-h-screen relative overflow-x-hidden`}
+      >
         {children}
       </body>
     </html>

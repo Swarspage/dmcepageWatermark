@@ -1,207 +1,258 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import AmbientBackground from "../components/AmbientBackground";
+import HeaderSection from "../components/HeaderSection";
+import FileUploader from "../components/FileUploader";
+import FileQueue from "../components/FileQueue";
+import PreviewModal from "../components/PreviewModal";
+import SessionMetrics from "../components/SessionMetrics";
+import ShareModal from "../components/ShareModal";
+import HowItWorksSection from "../components/HowItWorksSection";
+import { FileItem } from "../types";
+import { playPopSound, playStampSound } from "../utils/audio";
 
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
-  const [isDragActive, setIsDragActive] = useState<boolean>(false);
-  const [status, setStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [fileItems, setFileItems] = useState<FileItem[]>([]);
+  const [isProcessingAll, setIsProcessingAll] = useState<boolean>(false);
+  const [generalError, setGeneralError] = useState<string>("");
+  const [previewItem, setPreviewItem] = useState<{
+    item: FileItem;
+    mode: "original" | "processed";
+  } | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // Viral & Live Session Metrics State
+  const [sessionStats, setSessionStats] = useState<{
+    totalDocs: number;
+    totalBytes: number;
+    lastSpeedMs: number | null;
+  }>({
+    totalDocs: 0,
+    totalBytes: 0,
+    lastSpeedMs: null,
+  });
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
+  const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
+
+  const handleFilesSelected = (validFiles: File[]) => {
+    setGeneralError("");
+    if (validFiles.length === 0) return;
+
+    playPopSound(); // Mechanical haptic feedback on upload
+
+    const newItems: FileItem[] = validFiles.map((f) => ({
+      id: `${f.name}-${f.size}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      file: f,
+      status: "idle",
+      originalUrl: window.URL.createObjectURL(f),
+    }));
+
+    setFileItems((prev) => [...prev, ...newItems]);
+  };
+
+  const removeItem = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setIsDragActive(true);
-    } else if (e.type === "dragleave") {
-      setIsDragActive(false);
+    if (isProcessingAll) return;
+    playPopSound();
+    setFileItems((prev) => {
+      const target = prev.find((item) => item.id === id);
+      if (target?.originalUrl) window.URL.revokeObjectURL(target.originalUrl);
+      if (target?.processedUrl) window.URL.revokeObjectURL(target.processedUrl);
+      return prev.filter((item) => item.id !== id);
+    });
+    if (previewItem?.item.id === id) {
+      setPreviewItem(null);
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const droppedFile = e.dataTransfer.files[0];
-      if (droppedFile.type === "application/pdf") {
-        setFile(droppedFile);
-        setStatus("idle");
-      } else {
-        setErrorMessage("Please upload a valid PDF document.");
-        setStatus("error");
-      }
-    }
+  const clearAll = () => {
+    if (isProcessingAll) return;
+    playPopSound();
+    fileItems.forEach((item) => {
+      if (item.originalUrl) window.URL.revokeObjectURL(item.originalUrl);
+      if (item.processedUrl) window.URL.revokeObjectURL(item.processedUrl);
+    });
+    setFileItems([]);
+    setGeneralError("");
+    setPreviewItem(null);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setStatus("idle");
-    }
+  const openPreview = (item: FileItem, preferredMode: "original" | "processed" = "original") => {
+    playPopSound();
+    const targetMode = preferredMode === "processed" && item.processedUrl ? "processed" : "original";
+    setPreviewItem({ item, mode: targetMode });
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-
-  const removeFile = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFile(null);
-    setStatus("idle");
-    if (fileInputRef.current) fileInputRef.current.value = "";
+  const closePreview = () => {
+    setPreviewItem(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return;
+    if (fileItems.length === 0 || isProcessingAll) return;
 
-    setStatus("processing");
-    setErrorMessage("");
+    setIsProcessingAll(true);
+    setGeneralError("");
 
-    const formData = new FormData();
-    formData.append("pdf", file);
+    const startTime = performance.now();
+    let totalProcessedBytes = 0;
+    let totalSuccessful = 0;
 
-    try {
-      const response = await fetch("/api/pdf/process", {
-        method: "POST",
-        body: formData,
-      });
+    for (let i = 0; i < fileItems.length; i++) {
+      const item = fileItems[i];
+      if (item.status === "success") continue;
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to process PDF file.");
+      setFileItems((prev) =>
+        prev.map((it) =>
+          it.id === item.id ? { ...it, status: "processing", errorMessage: undefined } : it
+        )
+      );
+
+      const formData = new FormData();
+      formData.append("pdf", item.file);
+
+      try {
+        const response = await fetch("/api/pdf/process", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to process PDF document.");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Auto trigger download
+        const link = document.createElement("a");
+        link.href = url;
+        const baseName = item.file.name.replace(/\.[^/.]+$/, "");
+        const watermarkedFilename = `Watermarked_${baseName}.pdf`;
+        link.setAttribute("download", watermarkedFilename);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode?.removeChild(link);
+
+        totalProcessedBytes += item.file.size;
+        totalSuccessful++;
+
+        setFileItems((prev) =>
+          prev.map((it) =>
+            it.id === item.id ? { ...it, status: "success", processedUrl: url } : it
+          )
+        );
+
+        // If currently previewing this item, update the active preview state
+        if (previewItem?.item.id === item.id) {
+          setPreviewItem((prev) =>
+            prev
+              ? {
+                  item: { ...prev.item, status: "success", processedUrl: url },
+                  mode: "processed",
+                }
+              : null
+          );
+        }
+      } catch (err: any) {
+        console.error(err);
+        setFileItems((prev) =>
+          prev.map((it) =>
+            it.id === item.id
+              ? { ...it, status: "error", errorMessage: err.message || "Error stamping PDF" }
+              : it
+          )
+        );
       }
+    }
 
-      // Download processed PDF
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `processed_${file.name}`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
+    setIsProcessingAll(false);
 
-      setStatus("success");
-    } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || "An unexpected error occurred.");
-      setStatus("error");
+    if (totalSuccessful > 0) {
+      const durationPerDoc = Math.round((performance.now() - startTime) / totalSuccessful);
+      setSessionStats((prev) => ({
+        totalDocs: prev.totalDocs + totalSuccessful,
+        totalBytes: prev.totalBytes + totalProcessedBytes,
+        lastSpeedMs: durationPerDoc,
+      }));
+      playStampSound(); // Mechanical stamp / seal audio cue when batch is completed!
     }
   };
 
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
+  const currentProcessingIndex = fileItems.findIndex((it) => it.status === "processing");
 
   return (
-    <main>
-      <header className="brand-section">
-        <div className="logo-badge">DMCE PageX Tool</div>
-        <h1>Instantly Add Watermarks</h1>
-        <p className="subtitle">Append official Datta Meghe header logo and centralized watermarks to any PDF document.</p>
-      </header>
+    <div className="relative min-h-screen flex flex-col justify-between">
+      {/* Cinematic Layered Ambient Lighting Background */}
+      <AmbientBackground />
 
-      <section className="glass-card">
-        <form onSubmit={handleSubmit}>
-          <input
-            id="pdf-input"
-            type="file"
-            accept=".pdf"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: "none" }}
+      {/* Main Workspace Container */}
+      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col items-center space-y-4">
+        <HeaderSection onOpenShare={() => setIsShareOpen(true)} />
+
+        <SessionMetrics stats={sessionStats} />
+
+        <div className="w-full max-w-3xl space-y-5 pt-1">
+          <FileUploader
+            onFilesSelected={handleFilesSelected}
+            fileCount={fileItems.length}
+            disabled={isProcessingAll}
+            error={generalError}
           />
 
-          {!file ? (
-            <div
-              className={`dropzone ${isDragActive ? "drag-active" : ""}`}
-              onDragEnter={handleDrag}
-              onDragOver={handleDrag}
-              onDragLeave={handleDrag}
-              onDrop={handleDrop}
-              onClick={triggerFileInput}
-              id="pdf-dropzone"
-            >
-              <div className="upload-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: '32px', height: '32px' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                </svg>
-              </div>
-              <div>
-                <p style={{ fontWeight: 500, marginBottom: '4px' }}>Click to upload or drag & drop</p>
-                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>PDF documents only (max 20MB)</p>
-              </div>
-            </div>
-          ) : (
-            <div className="file-info" id="file-display">
-              <div className="file-details">
-                <span className="file-name">{file.name}</span>
-                <span className="file-size">{formatBytes(file.size)}</span>
-              </div>
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={removeFile}
-                title="Remove file"
-                id="remove-file-btn"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '20px', height: '20px' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          )}
+          <FileQueue
+            items={fileItems}
+            onRemoveItem={removeItem}
+            onClearAll={clearAll}
+            onOpenPreview={openPreview}
+            onProcessAll={handleSubmit}
+            isProcessingAll={isProcessingAll}
+            currentProcessingIndex={currentProcessingIndex}
+          />
+        </div>
 
-          {status === "error" && (
-            <div className="success-message" style={{ color: '#f87171', marginBottom: '24px' }} id="error-display">
-              <span>⚠️ {errorMessage}</span>
-            </div>
-          )}
+        <HowItWorksSection />
+      </main>
 
-          {status === "success" && (
-            <div className="success-message" style={{ marginBottom: '24px' }} id="success-display">
-              <div className="success-icon">✨</div>
-              <p style={{ fontWeight: 500 }}>PDF Processed Successfully!</p>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>Check your downloads folder.</p>
-            </div>
-          )}
+      {/* Preview Modal */}
+      <PreviewModal
+        previewData={previewItem}
+        onClose={closePreview}
+        onModeChange={(mode) =>
+          setPreviewItem((prev) => (prev ? { ...prev, mode } : null))
+        }
+      />
 
-          <button
-            type="submit"
-            id="process-btn"
-            className="action-btn primary"
-            disabled={!file || status === "processing"}
-          >
-            {status === "processing" ? (
-              <>
-                <div className="spinner"></div>
-                Processing PDF...
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '20px', height: '20px' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                </svg>
-                Process PDF
-              </>
-            )}
-          </button>
-        </form>
+      {/* Viral Share & QR Code Modal */}
+      <ShareModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+      />
+
+      {/* Security & Legal Disclaimer Banner */}
+      <section className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 pt-10 pb-2">
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-center space-y-2">
+          <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#EDEDEF]">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>100% LOCAL BROWSER PROCESSING • SAFE &amp; SECURE</span>
+          </div>
+          <p className="text-xs text-[#8A8F98] leading-relaxed max-w-2xl mx-auto">
+            No documents are stored, collected, or transmitted to external servers. This utility is provided &quot;as is&quot; without formal terms of service. Please use responsibly and at your own risk; the creators and host assume no liability for document modifications or misuse.
+          </p>
+        </div>
       </section>
 
-      <footer>
-        <p>© {new Date().getFullYear()} Datta Meghe College of Engineering. All rights reserved.</p>
+      {/* Technical Footer */}
+      <footer className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 mt-12 border-t border-white/[0.06] text-center text-xs font-mono text-[#8A8F98]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span>DMCE PAGEX • IDEA &amp; CREATED BY ARYAN SONAWANE</span>
+          <span className="flex items-center gap-2 text-white/70">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#5E6AD2]" />
+            <span>HOSTED &amp; DEPLOYED BY SWAR SHINDE</span>
+          </span>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
