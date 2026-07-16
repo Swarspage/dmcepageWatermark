@@ -7,6 +7,7 @@ import { playPopSound } from "../utils/audio";
 
 export default function HowItWorksSection() {
   const [activeTab, setActiveTab] = useState<"compare" | "before" | "after">("compare");
+  const [paperMode, setPaperMode] = useState<"dimmed" | "dark" | "bright">("dimmed");
 
   return (
     <section className="w-full max-w-4xl mx-auto pt-6 pb-4 space-y-6">
@@ -24,8 +25,9 @@ export default function HowItWorksSection() {
         </p>
       </div>
 
-      {/* Mode Selector for Mobile/Responsive */}
-      <div className="flex items-center justify-center gap-2 px-2">
+      {/* Mode & Lighting Selectors */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 px-2">
+        {/* Layout Mode Selector */}
         <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs font-mono">
           <button
             type="button"
@@ -33,11 +35,10 @@ export default function HowItWorksSection() {
               playPopSound();
               setActiveTab("compare");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer ${
-              activeTab === "compare"
+            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer ${activeTab === "compare"
                 ? "bg-white/[0.12] text-white font-medium shadow-sm"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-            }`}
+              }`}
           >
             SIDE-BY-SIDE VIEW
           </button>
@@ -47,11 +48,10 @@ export default function HowItWorksSection() {
               playPopSound();
               setActiveTab("before");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden ${
-              activeTab === "before"
+            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden ${activeTab === "before"
                 ? "bg-white/[0.12] text-white font-medium shadow-sm"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-            }`}
+              }`}
           >
             BEFORE ONLY
           </button>
@@ -61,25 +61,71 @@ export default function HowItWorksSection() {
               playPopSound();
               setActiveTab("after");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden flex items-center gap-1 ${
-              activeTab === "after"
+            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden flex items-center gap-1 ${activeTab === "after"
                 ? "bg-[#5E6AD2] text-white font-medium shadow-accent-btn"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-            }`}
+              }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>AFTER ONLY</span>
+          </button>
+        </div>
+
+        {/* Paper Lighting Mode (Eye Comfort vs Dark Paper vs Bright) */}
+        <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono">
+          <span className="text-[#8A8F98] px-2 hidden md:inline">PAPER LIGHTING:</span>
+          <button
+            type="button"
+            onClick={() => {
+              playPopSound();
+              setPaperMode("dimmed");
+            }}
+            className={`px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${paperMode === "dimmed"
+                ? "bg-white/[0.12] text-white font-medium"
+                : "text-[#8A8F98] hover:text-[#EDEDEF]"
+              }`}
+            title="Slightly dimmed to protect eyes in dark mode. Brightens on hover."
+          >
+            <Eye className="w-3 h-3 text-amber-400" />
+            <span>EYE COMFORT</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              playPopSound();
+              setPaperMode("dark");
+            }}
+            className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${paperMode === "dark"
+                ? "bg-white/[0.12] text-white font-medium"
+                : "text-[#8A8F98] hover:text-[#EDEDEF]"
+              }`}
+            title="Smart inverted dark mode sheet"
+          >
+            <span>DARK PAPER</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              playPopSound();
+              setPaperMode("bright");
+            }}
+            className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${paperMode === "bright"
+                ? "bg-white/[0.12] text-white font-medium"
+                : "text-[#8A8F98] hover:text-[#EDEDEF]"
+              }`}
+            title="Original 100% bright white"
+          >
+            <span>ORIGINAL BRIGHT</span>
           </button>
         </div>
       </div>
 
       {/* Visual Comparison Grid */}
       <div
-        className={`grid gap-4 px-2 ${
-          activeTab === "compare"
+        className={`grid gap-4 px-2 ${activeTab === "compare"
             ? "grid-cols-1 md:grid-cols-2"
             : "grid-cols-1 max-w-xl mx-auto"
-        }`}
+          }`}
       >
         {/* BEFORE CARD */}
         {(activeTab === "compare" || activeTab === "before") && (
@@ -96,13 +142,35 @@ export default function HowItWorksSection() {
               </span>
             </div>
 
-            {/* Document Frame Mockup */}
-            <div className="w-full aspect-[1/1.3] bg-white rounded-lg p-3 sm:p-4 shadow-xl border border-white/10 relative overflow-hidden flex flex-col items-center">
+            {/* Dark Studio Document Pad Frame */}
+            <div
+              onClick={() => {
+                if (paperMode === "dimmed") {
+                  playPopSound();
+                  setPaperMode("bright");
+                } else if (paperMode === "bright") {
+                  playPopSound();
+                  setPaperMode("dimmed");
+                }
+              }}
+              className="w-full aspect-[1/1.3] bg-[#0B0E14]/95 rounded-xl p-3 sm:p-4 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)] border border-white/10 relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer active:scale-[0.998] transition-all"
+            >
               <img
                 src="/without-watermark.jpg"
                 alt="Raw Experiment Sheet Before Stamping"
-                className="w-full h-full object-contain pointer-events-none select-none"
+                className={`w-full h-full object-contain pointer-events-none select-none rounded shadow-2xl transition-all duration-300 ${paperMode === "dimmed"
+                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100 ring-1 ring-white/10"
+                    : paperMode === "dark"
+                      ? "invert-[.88] hue-rotate-180 brightness-95 ring-1 ring-white/10"
+                      : "brightness-100 ring-1 ring-white/10"
+                  }`}
               />
+              {paperMode === "dimmed" && (
+                <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-300/90 opacity-80 group-hover:opacity-0 transition-opacity pointer-events-none">
+                  <span className="hidden sm:inline">Hover or click to brighten</span>
+                  <span className="sm:hidden">Tap to brighten</span>
+                </div>
+              )}
             </div>
           </SpotlightCard>
         )}
@@ -121,20 +189,43 @@ export default function HowItWorksSection() {
                 </span>
               </div>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.15] text-white border border-white/30 font-semibold">
-                READY FOR SUBMISSION
+                READY FOR PRINTING
               </span>
             </div>
 
-            {/* Document Frame Mockup Displaying Exact Watermarked Image */}
-            <div className="w-full aspect-[1/1.3] bg-white rounded-lg p-3 sm:p-4 shadow-2xl border-2 border-[#5E6AD2]/60 relative overflow-hidden flex flex-col items-center">
+            {/* Dark Studio Document Pad Frame */}
+            <div
+              onClick={() => {
+                if (paperMode === "dimmed") {
+                  playPopSound();
+                  setPaperMode("bright");
+                } else if (paperMode === "bright") {
+                  playPopSound();
+                  setPaperMode("dimmed");
+                }
+              }}
+              className="w-full aspect-[1/1.3] bg-[#0B0E14]/95 rounded-xl p-3 sm:p-4 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)] border-2 border-[#5E6AD2]/60 relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer active:scale-[0.998] transition-all"
+            >
               <img
                 src="/watermarked.jpg"
                 alt="Official Stamped Output With College Header & Watermark"
-                className="w-full h-full object-contain pointer-events-none select-none rounded"
+                className={`w-full h-full object-contain pointer-events-none select-none rounded shadow-2xl transition-all duration-300 ${paperMode === "dimmed"
+                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100 ring-1 ring-white/10"
+                    : paperMode === "dark"
+                      ? "invert-[.88] hue-rotate-180 brightness-95 ring-1 ring-white/10"
+                      : "brightness-100 ring-1 ring-white/10"
+                  }`}
               />
 
+              {paperMode === "dimmed" && (
+                <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-300/90 opacity-80 group-hover:opacity-0 transition-opacity pointer-events-none">
+                  <span className="hidden sm:inline">Hover or click to brighten</span>
+                  <span className="sm:hidden">Tap to brighten</span>
+                </div>
+              )}
+
               {/* Official Seal Badge */}
-              <div className="absolute bottom-2 right-2 bg-[#5E6AD2] text-white text-[9px] font-mono tracking-widest px-1.5 py-0.5 rounded shadow-sm z-20">
+              <div className="absolute bottom-2.5 right-2.5 bg-[#5E6AD2] text-white text-[9px] font-mono tracking-widest px-1.5 py-0.5 rounded shadow-sm z-20">
                 DMCE VERIFIED
               </div>
             </div>
