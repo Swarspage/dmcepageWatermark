@@ -83,12 +83,16 @@ export async function POST(req: NextRequest) {
           height: headerHeight,
         });
 
+        const scale = (height - headerHeight) / height;
+        const scaledWidth = width * scale;
+        const xOffset = (width - scaledWidth) / 2;
+
         const [embeddedPage] = await outputPdfDoc.embedPages([originalPage]);
         newPage.drawPage(embeddedPage, {
-          x: 0,
-          y: -headerHeight,
-          width: width,
-          height: height,
+          x: xOffset,
+          y: 0,
+          width: scaledWidth,
+          height: height - headerHeight,
         });
       }
     } else {
