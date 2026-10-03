@@ -70,10 +70,10 @@ export async function POST(req: NextRequest) {
 
         newPage.drawImage(watermarkImage, {
           x: (width - wmWidth) / 2,
-          y: (height - wmHeight) / 2,
+          y: (height - headerHeight - wmHeight) / 2,
           width: wmWidth,
           height: wmHeight,
-          opacity: 0.12,
+          opacity: 0.25,
         });
 
         newPage.drawImage(headerImage, {
@@ -112,10 +112,10 @@ export async function POST(req: NextRequest) {
 
       newPage.drawImage(watermarkImage, {
         x: (width - wmWidth) / 2,
-        y: (height - wmHeight) / 2,
+        y: (height - headerHeight - wmHeight) / 2,
         width: wmWidth,
         height: wmHeight,
-        opacity: 0.12,
+        opacity: 0.25,
       });
 
       newPage.drawImage(headerImage, {
