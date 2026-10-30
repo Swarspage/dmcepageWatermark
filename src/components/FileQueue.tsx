@@ -44,13 +44,11 @@ export default function FileQueue({
   };
 
   return (
-    <div className="w-full space-y-6 pt-4 animate-in fade-in duration-300">
+    <div className="w-full space-y-5 pt-3">
       {/* Queue Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
-        <div className="flex items-center gap-2.5 text-left">
-          <div className="p-1.5 rounded-lg bg-[#5E6AD2]/15 text-[#5E6AD2]">
-            <Layers className="w-4 h-4" />
-          </div>
+        <div className="flex items-center gap-2 text-left">
+          <Layers className="w-4 h-4 text-[#8A8F98]" />
           <h3 className="text-lg font-semibold tracking-tight text-[#EDEDEF]">
             Queued Documents <span className="text-xs font-mono text-[#8A8F98] ml-1">({items.length})</span>
           </h3>
@@ -70,20 +68,18 @@ export default function FileQueue({
       </div>
 
       {/* Document Items List */}
-      <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+      <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
         {items.map((item) => {
           return (
             <SpotlightCard
               key={item.id}
-              variant="glass"
-              className="p-4 transition-all duration-200 hover:border-white/[0.14]"
+              variant="default"
+              className="p-3.5 transition-colors duration-150"
             >
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                {/* File Info */}
-                <div className="flex items-center gap-3.5 overflow-hidden w-full sm:w-auto">
-                  <div className="w-11 h-11 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-[#5E6AD2] shrink-0">
-                    <FileText className="w-5 h-5" />
-                  </div>
+                {/* File Info - Plain icon without tinted tile square */}
+                <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
+                  <FileText className="w-5 h-5 text-[#8A8F98] shrink-0" />
                   <div className="flex flex-col overflow-hidden text-left">
                     <span
                       className="font-medium text-sm sm:text-base text-[#EDEDEF] truncate max-w-[220px] sm:max-w-[320px] md:max-w-[400px]"
@@ -101,22 +97,22 @@ export default function FileQueue({
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-white/[0.06] shrink-0">
                   {/* Status Badges */}
                   {item.status === "processing" && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5E6AD2]/15 border border-[#5E6AD2]/30 text-xs font-mono text-[#6872D9] animate-pulse">
+                    <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#050506] border border-white/[0.12] text-xs font-mono text-[#EDEDEF]">
                       <div className="spinner-linear !w-3.5 !h-3.5" />
                       <span>Stamping...</span>
                     </div>
                   )}
 
                   {item.status === "success" && (
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs font-mono text-emerald-400">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#050506] border border-emerald-500/30 text-xs font-mono text-emerald-400">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Stamped ✨</span>
+                      <span>Stamped</span>
                     </div>
                   )}
 
                   {item.status === "error" && (
                     <div
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-xs font-mono text-red-400 max-w-[150px] truncate"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#050506] border border-red-500/30 text-xs font-mono text-red-400 max-w-[150px] truncate"
                       title={item.errorMessage}
                     >
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -125,7 +121,7 @@ export default function FileQueue({
                   )}
 
                   {item.status === "idle" && (
-                    <span className="px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-[#8A8F98]">
+                    <span className="px-2.5 py-1 rounded-md bg-[#050506] border border-white/[0.08] text-xs font-mono text-[#8A8F98]">
                       READY
                     </span>
                   )}
@@ -172,8 +168,8 @@ export default function FileQueue({
           size="lg"
           disabled={items.length === 0 || isProcessingAll}
           isLoading={isProcessingAll}
-          leftIcon={!isProcessingAll ? <Sparkles className="w-5 h-5 text-white" /> : undefined}
-          className="w-full py-4 text-base font-semibold shadow-accent-btn"
+          leftIcon={!isProcessingAll ? <Sparkles className="w-4 h-4 text-white" /> : undefined}
+          className="w-full py-3.5 text-sm font-semibold"
         >
           {isProcessingAll ? (
             <span>

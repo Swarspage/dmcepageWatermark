@@ -40,22 +40,17 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
 
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
     shareUrl || "https://dmce.edu"
-  )}&color=EDEDEF&bgcolor=0a0a0f&margin=12`;
+  )}&color=EDEDEF&bgcolor=0B0C10&margin=12`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050506]/85 backdrop-blur-xl p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-[#0a0a0f] border border-white/[0.12] rounded-2xl shadow-2xl w-full max-w-lg p-6 flex flex-col relative overflow-hidden animate-in zoom-in-95 duration-200 space-y-6">
-        {/* Top Highlight */}
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#5E6AD2]/50 to-transparent pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050506]/90 p-3 sm:p-6 animate-in fade-in duration-150">
+      <div className="bg-[#0B0C10] border border-white/[0.1] rounded-xl shadow-2xl w-full max-w-lg p-6 flex flex-col relative overflow-hidden space-y-6">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#5E6AD2]/15 border border-[#5E6AD2]/30 flex items-center justify-center text-[#5E6AD2]">
-              <Share2 className="w-4 h-4" />
-            </div>
+          <div className="flex items-center gap-3">
+            <Share2 className="w-5 h-5 text-[#8A8F98]" />
             <div className="flex flex-col text-left">
-              <h3 className="text-base font-semibold text-white">
+              <h3 className="text-base font-semibold text-[#EDEDEF]">
                 Share DMCE PageX With Your Class
               </h3>
               <span className="text-xs font-mono text-[#8A8F98]">
@@ -68,7 +63,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="!p-2 text-[#8A8F98] hover:!text-white"
+            className="!p-2 text-[#8A8F98] hover:!text-[#EDEDEF]"
           >
             <X className="w-5 h-5" />
           </LinearButton>
@@ -85,7 +80,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
               value={shareUrl}
               onChange={(e) => setShareUrl(e.target.value)}
               placeholder="https://pagex.yoursubdomain.com"
-              className="flex-1 px-3.5 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.1] text-sm text-white focus:outline-none focus:border-[#5E6AD2] font-mono transition-colors"
+              className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#07080B] border border-white/[0.1] text-sm text-[#EDEDEF] focus:outline-none focus:border-[#5E6AD2] font-mono transition-colors"
             />
             <LinearButton
               type="button"
@@ -106,22 +101,22 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
         </div>
 
         {/* Live Scannable QR Code */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.08] flex flex-col items-center justify-center space-y-3">
+        <div className="p-4 rounded-lg bg-[#07080B] border border-white/[0.08] flex flex-col items-center justify-center space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono text-[#8A8F98] uppercase tracking-wider">
-            <QrCode className="w-4 h-4 text-[#5E6AD2]" />
+            <QrCode className="w-4 h-4 text-[#8A8F98]" />
             <span>Scan in College Lab for Instant Phone/Laptop Access</span>
           </div>
-          <div className="p-3 rounded-xl bg-[#0a0a0f] border border-white/10 shadow-inner">
+          <div className="p-3 rounded-lg bg-[#0B0C10] border border-white/10">
             <img
               src={qrCodeUrl}
               alt="DMCE PageX QR Code"
-              className="w-48 h-48 rounded-lg object-contain"
+              className="w-48 h-48 rounded object-contain"
             />
           </div>
         </div>
 
         {/* One-Click Class Invite Copy */}
-        <div className="pt-2">
+        <div className="pt-1">
           <LinearButton
             type="button"
             variant="secondary"
@@ -131,7 +126,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
               copiedMessage ? (
                 <Check className="w-4 h-4 text-emerald-400" />
               ) : (
-                <MessageSquareShare className="w-4 h-4 text-[#5E6AD2]" />
+                <MessageSquareShare className="w-4 h-4 text-[#8A8F98]" />
               )
             }
             className="w-full justify-center"

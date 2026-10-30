@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, ShieldCheck, FileText, ArrowRight, Download, Eye, Layers } from "lucide-react";
+import { Sparkles, Eye } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
 import { playPopSound } from "../utils/audio";
 
@@ -12,12 +12,11 @@ export default function HowItWorksSection() {
   return (
     <section className="w-full max-w-4xl mx-auto pt-6 pb-4 space-y-6">
       {/* Section Header */}
-      <div className="text-center space-y-2 max-w-2xl mx-auto px-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#5E6AD2]/10 border border-[#5E6AD2]/25 text-[11px] font-mono tracking-wider text-[#5E6AD2] uppercase">
-          <Layers className="w-3.5 h-3.5" />
-          <span>VISUAL PIPELINE &amp; DEMONSTRATION</span>
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+      <div className="text-center space-y-1.5 max-w-2xl mx-auto px-2">
+        <p className="text-xs font-semibold tracking-wider text-[#8A8F98] uppercase">
+          Visual Pipeline &amp; Demonstration
+        </p>
+        <h2 className="text-2xl sm:text-3xl font-semibold text-[#EDEDEF] tracking-tight">
           How The Stamping Engine Works
         </h2>
         <p className="text-xs sm:text-sm text-[#8A8F98] leading-normal">
@@ -28,17 +27,18 @@ export default function HowItWorksSection() {
       {/* Mode & Lighting Selectors */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 px-2">
         {/* Layout Mode Selector */}
-        <div className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs font-mono">
+        <div className="inline-flex p-1 rounded-lg bg-[#0B0C10] border border-white/[0.08] text-xs font-mono">
           <button
             type="button"
             onClick={() => {
               playPopSound();
               setActiveTab("compare");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer ${activeTab === "compare"
-                ? "bg-white/[0.12] text-white font-medium shadow-sm"
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+              activeTab === "compare"
+                ? "bg-white/[0.1] text-[#EDEDEF] font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
           >
             SIDE-BY-SIDE VIEW
           </button>
@@ -48,10 +48,11 @@ export default function HowItWorksSection() {
               playPopSound();
               setActiveTab("before");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden ${activeTab === "before"
-                ? "bg-white/[0.12] text-white font-medium shadow-sm"
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer sm:hidden ${
+              activeTab === "before"
+                ? "bg-white/[0.1] text-[#EDEDEF] font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
           >
             BEFORE ONLY
           </button>
@@ -61,18 +62,19 @@ export default function HowItWorksSection() {
               playPopSound();
               setActiveTab("after");
             }}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-150 cursor-pointer sm:hidden flex items-center gap-1 ${activeTab === "after"
-                ? "bg-[#5E6AD2] text-white font-medium shadow-accent-btn"
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer sm:hidden flex items-center gap-1 ${
+              activeTab === "after"
+                ? "bg-[#5E6AD2] text-white font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>AFTER ONLY</span>
           </button>
         </div>
 
-        {/* Paper Lighting Mode (Eye Comfort vs Dark Paper vs Bright) */}
-        <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono">
+        {/* Paper Lighting Mode */}
+        <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-[#0B0C10] border border-white/[0.08] text-[11px] font-mono">
           <span className="text-[#8A8F98] px-2 hidden md:inline">PAPER LIGHTING:</span>
           <button
             type="button"
@@ -80,13 +82,14 @@ export default function HowItWorksSection() {
               playPopSound();
               setPaperMode("dimmed");
             }}
-            className={`px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${paperMode === "dimmed"
-                ? "bg-white/[0.12] text-white font-medium"
+            className={`px-2.5 py-1.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+              paperMode === "dimmed"
+                ? "bg-white/[0.1] text-[#EDEDEF] font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
             title="Slightly dimmed to protect eyes in dark mode. Brightens on hover."
           >
-            <Eye className="w-3 h-3 text-amber-400" />
+            <Eye className="w-3 h-3 text-[#8A8F98]" />
             <span>EYE COMFORT</span>
           </button>
           <button
@@ -95,10 +98,11 @@ export default function HowItWorksSection() {
               playPopSound();
               setPaperMode("dark");
             }}
-            className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${paperMode === "dark"
-                ? "bg-white/[0.12] text-white font-medium"
+            className={`px-2.5 py-1.5 rounded-md transition-colors cursor-pointer ${
+              paperMode === "dark"
+                ? "bg-white/[0.1] text-[#EDEDEF] font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
             title="Smart inverted dark mode sheet"
           >
             <span>DARK PAPER</span>
@@ -109,10 +113,11 @@ export default function HowItWorksSection() {
               playPopSound();
               setPaperMode("bright");
             }}
-            className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${paperMode === "bright"
-                ? "bg-white/[0.12] text-white font-medium"
+            className={`px-2.5 py-1.5 rounded-md transition-colors cursor-pointer ${
+              paperMode === "bright"
+                ? "bg-white/[0.1] text-[#EDEDEF] font-medium"
                 : "text-[#8A8F98] hover:text-[#EDEDEF]"
-              }`}
+            }`}
             title="Original 100% bright white"
           >
             <span>ORIGINAL BRIGHT</span>
@@ -122,27 +127,28 @@ export default function HowItWorksSection() {
 
       {/* Visual Comparison Grid */}
       <div
-        className={`grid gap-4 px-2 ${activeTab === "compare"
+        className={`grid gap-4 px-2 ${
+          activeTab === "compare"
             ? "grid-cols-1 md:grid-cols-2"
             : "grid-cols-1 max-w-xl mx-auto"
-          }`}
+        }`}
       >
         {/* BEFORE CARD */}
         {(activeTab === "compare" || activeTab === "before") && (
-          <SpotlightCard variant="glass" className="p-4 sm:p-5 flex flex-col justify-between space-y-4">
+          <SpotlightCard variant="default" className="p-4 sm:p-5 flex flex-col justify-between space-y-4">
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400/80" />
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
                 <span className="text-xs font-mono font-medium text-[#EDEDEF] uppercase tracking-wider">
                   1. Raw Input Document
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-[#8A8F98] border border-white/[0.08]">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[#8A8F98] border border-white/[0.08]">
                 WITHOUT HEADER / WATERMARK
               </span>
             </div>
 
-            {/* Dark Studio Document Pad Frame */}
+            {/* Document Frame */}
             <div
               onClick={() => {
                 if (paperMode === "dimmed") {
@@ -153,20 +159,21 @@ export default function HowItWorksSection() {
                   setPaperMode("dimmed");
                 }
               }}
-              className="w-full aspect-[1/1.3] bg-[#0B0E14]/95 rounded-xl p-3 sm:p-4 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)] border border-white/10 relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer active:scale-[0.998] transition-all"
+              className="w-full aspect-[1/1.3] bg-[#07080B] rounded-lg p-3 sm:p-4 border border-white/[0.08] relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer"
             >
               <img
                 src="/without-watermark.jpg"
                 alt="Raw Experiment Sheet Before Stamping"
-                className={`w-full h-full object-contain pointer-events-none select-none rounded shadow-2xl transition-all duration-300 ${paperMode === "dimmed"
-                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100 ring-1 ring-white/10"
+                className={`w-full h-full object-contain pointer-events-none select-none rounded transition-opacity duration-200 ${
+                  paperMode === "dimmed"
+                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100"
                     : paperMode === "dark"
-                      ? "invert-[.88] hue-rotate-180 brightness-95 ring-1 ring-white/10"
-                      : "brightness-100 ring-1 ring-white/10"
-                  }`}
+                    ? "invert-[.88] hue-rotate-180 brightness-95"
+                    : "brightness-100"
+                }`}
               />
               {paperMode === "dimmed" && (
-                <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-300/90 opacity-80 group-hover:opacity-0 transition-opacity pointer-events-none">
+                <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-[#0B0C10] border border-white/10 text-[9px] font-mono text-[#8A8F98] group-hover:opacity-0 transition-opacity pointer-events-none">
                   <span className="hidden sm:inline">Hover or click to brighten</span>
                   <span className="sm:hidden">Tap to brighten</span>
                 </div>
@@ -178,22 +185,22 @@ export default function HowItWorksSection() {
         {/* AFTER CARD */}
         {(activeTab === "compare" || activeTab === "after") && (
           <SpotlightCard
-            variant="glass"
-            className="p-4 sm:p-5 flex flex-col justify-between space-y-4 !border-[#5E6AD2]/40 !bg-[#5E6AD2]/[0.03]"
+            variant="default"
+            className="p-4 sm:p-5 flex flex-col justify-between space-y-4"
           >
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-mono font-medium text-emerald-300 uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-xs font-mono font-medium text-[#EDEDEF] uppercase tracking-wider">
                   2. Official Stamped Output
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.15] text-white border border-white/30 font-semibold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.08] text-[#EDEDEF] border border-white/[0.14] font-medium">
                 READY FOR PRINTING
               </span>
             </div>
 
-            {/* Dark Studio Document Pad Frame */}
+            {/* Document Frame */}
             <div
               onClick={() => {
                 if (paperMode === "dimmed") {
@@ -204,28 +211,29 @@ export default function HowItWorksSection() {
                   setPaperMode("dimmed");
                 }
               }}
-              className="w-full aspect-[1/1.3] bg-[#0B0E14]/95 rounded-xl p-3 sm:p-4 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)] border-2 border-[#5E6AD2]/60 relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer active:scale-[0.998] transition-all"
+              className="w-full aspect-[1/1.3] bg-[#07080B] rounded-lg p-3 sm:p-4 border border-white/[0.1] relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer"
             >
               <img
                 src="/watermarked.jpg"
                 alt="Official Stamped Output With College Header & Watermark"
-                className={`w-full h-full object-contain pointer-events-none select-none rounded shadow-2xl transition-all duration-300 ${paperMode === "dimmed"
-                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100 ring-1 ring-white/10"
+                className={`w-full h-full object-contain pointer-events-none select-none rounded transition-opacity duration-200 ${
+                  paperMode === "dimmed"
+                    ? "brightness-[0.80] contrast-[1.05] group-hover:brightness-100"
                     : paperMode === "dark"
-                      ? "invert-[.88] hue-rotate-180 brightness-95 ring-1 ring-white/10"
-                      : "brightness-100 ring-1 ring-white/10"
-                  }`}
+                    ? "invert-[.88] hue-rotate-180 brightness-95"
+                    : "brightness-100"
+                }`}
               />
 
               {paperMode === "dimmed" && (
-                <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-mono text-amber-300/90 opacity-80 group-hover:opacity-0 transition-opacity pointer-events-none">
+                <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-[#0B0C10] border border-white/10 text-[9px] font-mono text-[#8A8F98] group-hover:opacity-0 transition-opacity pointer-events-none">
                   <span className="hidden sm:inline">Hover or click to brighten</span>
                   <span className="sm:hidden">Tap to brighten</span>
                 </div>
               )}
 
               {/* Official Seal Badge */}
-              <div className="absolute bottom-2.5 right-2.5 bg-[#5E6AD2] text-white text-[9px] font-mono tracking-widest px-1.5 py-0.5 rounded shadow-sm z-20">
+              <div className="absolute bottom-2.5 right-2.5 bg-[#5E6AD2] text-white text-[9px] font-mono tracking-wider px-2 py-0.5 rounded z-20">
                 DMCE VERIFIED
               </div>
             </div>

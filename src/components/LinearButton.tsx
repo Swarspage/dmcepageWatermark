@@ -23,17 +23,17 @@ export default function LinearButton({
   ...props
 }: LinearButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-medium transition-all duration-200 ease-[0.16,1,0.3,1] select-none rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5E6AD2]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050506] disabled:opacity-40 disabled:pointer-events-none active:scale-[0.98] relative overflow-hidden group cursor-pointer";
+    "inline-flex items-center justify-center font-medium transition-colors duration-150 select-none rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5E6AD2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050506] disabled:opacity-40 disabled:pointer-events-none relative overflow-hidden cursor-pointer";
 
   const variantStyles = {
     primary:
-      "bg-[#5E6AD2] text-white shadow-accent-btn hover:bg-[#6872D9] hover:shadow-[0_0_0_1px_rgba(104,114,217,0.8),0_6px_28px_rgba(94,106,210,0.5),inset_0_1px_0_0_rgba(255,255,255,0.3)]",
+      "bg-[#5E6AD2] text-white border border-[#5E6AD2] shadow-sm hover:bg-[#525db8] active:bg-[#4a54a8]",
     secondary:
-      "bg-white/[0.05] text-[#EDEDEF] border border-white/[0.08] hover:bg-white/[0.09] hover:border-white/[0.15] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]",
+      "bg-[#0B0C10] text-[#EDEDEF] border border-white/[0.1] hover:bg-white/[0.05] hover:border-white/[0.18] shadow-sm",
     ghost:
-      "bg-transparent text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.05]",
+      "bg-transparent text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.04]",
     danger:
-      "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]",
+      "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/30 shadow-sm",
   }[variant];
 
   const sizeStyles = {
@@ -48,11 +48,6 @@ export default function LinearButton({
       className={`${baseStyles} ${variantStyles} ${sizeStyles} ${className}`}
       {...props}
     >
-      {/* Subtle shine sweep on primary button hover */}
-      {variant === "primary" && !isLoading && !disabled && (
-        <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-[300%] transition-transform duration-700 ease-out pointer-events-none" />
-      )}
-
       {isLoading && <div className="spinner-linear shrink-0" />}
       {!isLoading && leftIcon && <span className="shrink-0">{leftIcon}</span>}
       <span className="truncate">{children}</span>

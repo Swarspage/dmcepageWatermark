@@ -23,46 +23,40 @@ export default function SessionMetrics({ stats }: SessionMetricsProps) {
 
   return (
     <div className="w-full max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0">
-      {/* Metric 1: Speed */}
-      <SpotlightCard variant="glass" className="py-2.5 px-3.5 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-[#5E6AD2]/15 border border-[#5E6AD2]/30 flex items-center justify-center text-[#5E6AD2] shrink-0">
-          <Zap className="w-4 h-4" />
-        </div>
+      {/* Metric 1: Speed - Plain icon without tinted tile square */}
+      <SpotlightCard variant="default" className="py-3 px-3.5 flex items-center gap-3">
+        <Zap className="w-5 h-5 text-[#8A8F98] shrink-0" />
         <div className="flex flex-col text-left">
-          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
             Processing Speed
           </span>
-          <span className="text-sm font-semibold text-white font-mono">
+          <span className="text-sm font-semibold text-[#EDEDEF] font-mono">
             {stats.lastSpeedMs !== null ? `~${stats.lastSpeedMs} ms/doc` : "Instantaneous"}
           </span>
         </div>
       </SpotlightCard>
 
-      {/* Metric 2: Stamped Count */}
-      <SpotlightCard variant="glass" className="py-2.5 px-3.5 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-          <PackageCheck className="w-4 h-4" />
-        </div>
+      {/* Metric 2: Stamped Count - Plain icon without tinted tile square */}
+      <SpotlightCard variant="default" className="py-3 px-3.5 flex items-center gap-3">
+        <PackageCheck className="w-5 h-5 text-[#8A8F98] shrink-0" />
         <div className="flex flex-col text-left">
-          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
             Stamped In Session
           </span>
-          <span className="text-sm font-semibold text-white font-mono">
+          <span className="text-sm font-semibold text-[#EDEDEF] font-mono">
             {stats.totalDocs} {stats.totalDocs === 1 ? "Document" : "Documents"}
           </span>
         </div>
       </SpotlightCard>
 
-      {/* Metric 3: Local Buffer Processed */}
-      <SpotlightCard variant="glass" className="py-2.5 px-3.5 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
-          <HardDrive className="w-4 h-4" />
-        </div>
+      {/* Metric 3: Local Buffer Processed - Plain icon without tinted tile square */}
+      <SpotlightCard variant="default" className="py-3 px-3.5 flex items-center gap-3">
+        <HardDrive className="w-5 h-5 text-[#8A8F98] shrink-0" />
         <div className="flex flex-col text-left">
-          <span className="text-[10px] mt-2 font-mono text-[#8A8F98] uppercase tracking-wider">
+          <span className="text-[10px] font-mono text-[#8A8F98] uppercase tracking-wider">
             Local RAM Buffer
           </span>
-          <span className="text-sm font-semibold text-white font-mono">
+          <span className="text-sm font-semibold text-[#EDEDEF] font-mono">
             {formatBytes(stats.totalBytes)}
           </span>
         </div>

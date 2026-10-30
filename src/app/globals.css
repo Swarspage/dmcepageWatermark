@@ -1,24 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Linear / Modern Color Tokens */
-  --color-background-deep: #020203;
+  /* Core brand tokens */
   --color-background-base: #050506;
-  --color-background-elevated: #0a0a0c;
-  --color-surface: rgba(255, 255, 255, 0.05);
-  --color-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-background-card: #0B0C10;
   --color-foreground: #EDEDEF;
   --color-foreground-muted: #8A8F98;
-  --color-foreground-subtle: rgba(255, 255, 255, 0.60);
   --color-accent: #5E6AD2;
-  --color-accent-bright: #6872D9;
-  --color-accent-glow: rgba(94, 106, 210, 0.3);
-  --color-border-default: rgba(255, 255, 255, 0.06);
-  --color-border-hover: rgba(255, 255, 255, 0.10);
-  --color-border-accent: rgba(94, 106, 210, 0.30);
+  --color-border-default: rgba(255, 255, 255, 0.08);
 
-  /* Font configuration */
-  --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Typography tokens */
+  --font-sans: var(--font-ibm-plex-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
@@ -29,132 +22,58 @@
   }
 
   body {
-    background-color: var(--color-background-base);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
+    background-color: #050506;
+    color: #EDEDEF;
+    font-family: var(--font-ibm-plex-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  code, kbd, samp, pre, .font-mono {
+    font-family: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
   /* Custom smooth scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: #050506;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
-/* Keyframe Animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(1deg);
-  }
-}
-
-@keyframes float-reverse {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(18px) rotate(-1deg);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.12;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.22;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.animate-float {
-  animation: float 9s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: float-reverse 11s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 7s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  background-size: 200% auto;
-  animation: shimmer 6s linear infinite;
-}
-
-/* Multi-Layer Shadows & Glows */
+/* Neutral depth shadows - NO colored halos */
 .shadow-multi-card {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
-              0 2px 20px rgba(0, 0, 0, 0.4),
-              0 0 40px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-.shadow-multi-card:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),
-              0 8px 40px rgba(0, 0, 0, 0.5),
-              0 0 80px rgba(94, 106, 210, 0.12),
-              inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
-}
-
-.shadow-accent-btn {
-  box-shadow: 0 0 0 1px rgba(94, 106, 210, 0.5),
-              0 4px 16px rgba(94, 106, 210, 0.35),
-              inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
-}
-
-.shadow-accent-btn:hover {
-  box-shadow: 0 0 0 1px rgba(104, 114, 217, 0.7),
-              0 6px 24px rgba(94, 106, 210, 0.5),
-              inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
-}
-
-/* Technical Grid & Noise Pattern Backgrounds */
+/* Subtle Technical Grid Background */
 .bg-technical-grid {
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
+  background-size: 48px 48px;
 }
 
-/* Subtle spinner for processing state */
+/* Spinner for processing state */
 @keyframes spin-clean {
   to { transform: rotate(360deg); }
 }
 
 .spinner-linear {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-top-color: #5E6AD2;
   border-radius: 50%;
-  animation: spin-clean 0.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: spin-clean 0.75s linear infinite;
 }

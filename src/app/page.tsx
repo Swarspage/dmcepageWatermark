@@ -232,7 +232,7 @@ export default function Home() {
 
       {/* Security & Legal Disclaimer Banner */}
       <section className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 pt-10 pb-2">
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-center space-y-2">
+        <div className="p-4 rounded-lg bg-[#0B0C10] border border-white/[0.08] text-center space-y-2">
           <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#EDEDEF]">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             <span>100% LOCAL BROWSER PROCESSING • SAFE &amp; SECURE</span>

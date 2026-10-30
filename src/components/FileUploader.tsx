@@ -93,23 +93,17 @@ export default function FileUploader({
         onDragOver={handleDrag}
         onDragLeave={handleDrag}
         onDrop={handleDrop}
-        className={`p-8 sm:p-12 cursor-pointer transition-all duration-300 group ${
-          isDragActive
-            ? "!border-[#5E6AD2] !bg-[#5E6AD2]/[0.08] scale-[0.99]"
-            : ""
+        className={`p-8 sm:p-12 cursor-pointer transition-colors duration-150 group ${
+          isDragActive ? "!border-[#5E6AD2] bg-white/[0.02]" : ""
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        <div className="flex flex-col items-center justify-center text-center space-y-4">
-          {/* Icon Container with multi-layer shadow and accent glow on hover */}
-          <div
-            className={`w-16 h-16 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:border-[#5E6AD2]/50 group-hover:bg-[#5E6AD2]/15 shadow-multi-card ${
-              isDragActive ? "border-[#5E6AD2] bg-[#5E6AD2]/25 scale-110" : ""
-            }`}
-          >
+        <div className="flex flex-col items-center justify-center text-center space-y-3.5">
+          {/* Plain icon without tinted tile or multi-layer glow box */}
+          <div className="flex items-center justify-center pb-1">
             {fileCount > 0 ? (
-              <PlusCircle className="w-7 h-7 text-[#5E6AD2] transition-transform duration-300 group-hover:rotate-90" />
+              <PlusCircle className="w-9 h-9 text-[#5E6AD2]" />
             ) : (
-              <UploadCloud className="w-7 h-7 text-[#EDEDEF] group-hover:text-[#5E6AD2] transition-colors" />
+              <UploadCloud className="w-9 h-9 text-[#8A8F98] group-hover:text-[#EDEDEF] transition-colors" />
             )}
           </div>
 
@@ -124,8 +118,8 @@ export default function FileUploader({
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-[#8A8F98]">
-            <FileText className="w-3.5 h-3.5 text-[#5E6AD2]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#050506] border border-white/[0.08] text-xs font-mono text-[#8A8F98]">
+            <FileText className="w-3.5 h-3.5 text-[#8A8F98]" />
             <span>PDF &amp; IMAGE BATCH PIPELINE READY</span>
           </div>
         </div>
@@ -133,7 +127,7 @@ export default function FileUploader({
 
       {/* Error Alert Banner */}
       {error && (
-        <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/[0.08] border border-red-500/25 text-red-400 text-sm font-medium transition-all duration-200 animate-in fade-in">
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/[0.08] border border-red-500/25 text-red-400 text-sm font-medium">
           <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
           <span>{error}</span>
         </div>
